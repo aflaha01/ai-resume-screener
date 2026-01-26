@@ -76,3 +76,4 @@ export default function RegisterForm({ onRegister, loading, message }: RegisterF
     </div>
   );
 }
+

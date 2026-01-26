@@ -4,26 +4,21 @@ import { useState } from "react";
 import Link from "next/link";
 
 interface LoginFormProps {
-  onSubmit: (formData: { email: string; password: string }) => Promise<void>;
+  onSubmit: (data: { username: string; password: string }) => Promise<void>;
+  loading: boolean;
+  message: string;
 }
 
-export default function LoginForm({ onSubmit }: LoginFormProps) {
-  const [email, setEmail] = useState("");
+export default function LoginForm({
+  onSubmit,
+  loading,
+  message,
+}: LoginFormProps) {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    setLoading(true);
-    setMessage("");
-
-    try {
-      await onSubmit({ email, password });
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Login failed");
-    } finally {
-      setLoading(false);
-    }
+    await onSubmit({ username, password });
   };
 
   return (
@@ -34,54 +29,33 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
         </h1>
 
         <div className="space-y-4">
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="abcdef@gmail.com"
-              className="w-full px-4 py-2.5 rounded-md border border-gray-300
-                bg-blue-50 text-black
-                focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          <input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+            className="w-full px-4 py-2.5 border rounded-md bg-blue-50 text-black"
+          />
 
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-4 py-2.5 rounded-md border border-gray-300
-                bg-blue-50 text-black
-                focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="w-full px-4 py-2.5 border rounded-md bg-blue-50 text-black"
+          />
 
-          {/* Button */}
           <button
             onClick={handleLogin}
             disabled={loading}
-            className="w-full mt-2 bg-blue-600 hover:bg-blue-700
-              text-white font-medium py-2.5 rounded-md
-              transition disabled:opacity-50"
+            className="w-full bg-blue-600 text-white py-2.5 rounded-md"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </div>
 
-        {/* Message */}
         {message && (
           <div
-            className={`mt-4 text-sm text-center p-2 rounded-md ${
+            className={`mt-4 text-center p-2 rounded-md ${
               message.includes("successful")
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
@@ -91,10 +65,9 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
           </div>
         )}
 
-        {/* Register link */}
-        <p className="mt-4 text-sm text-center text-gray-600">
-          Don't have an account?{" "}
-          <Link href="/register" className="text-blue-600 hover:underline">
+        <p className="mt-4 text-sm text- center text-gray-600">
+          Don’t have an account?{" "}
+          <Link href="/register" className="text-blue-600">
             Register
           </Link>
         </p>
