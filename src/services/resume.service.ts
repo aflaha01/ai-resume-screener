@@ -1,5 +1,9 @@
-// src/services/resume.service.ts
 import { API_BASE_URL } from "@/lib/api";
+
+/* Author: Aflaha on Jan 30, 2026 
+   Purpose: Provides resume-related API services and types for uploading resumes and handling extracted profile data from the backend. 
+   Props: None 
+*/
 
 export interface ResumeProfile {
   name?: string;
@@ -15,7 +19,6 @@ export interface ResumeProfile {
 
 export interface ResumeUploadResponse {
   resume_id: number;
-  // profile_id: number; 
   profile: ResumeProfile;
 }
 

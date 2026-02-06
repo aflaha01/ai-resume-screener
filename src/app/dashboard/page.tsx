@@ -1,55 +1,22 @@
-"use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import ResumeUpload from "@/components/resume/resumeUpload";
-import { ResumeService } from "@/services/resume.service";
+/* Author: Aflaha on Feb 1, 2026 
+   Purpose: Renders the main dashboard page for authenticated users 
+   Props: None 
+*/
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-
-const handleResumeUpload = async (file: File) => {
-  setLoading(true);
-  setMessage("");
-
-  try {
-    const token = localStorage.getItem("access");
-    if (!token) throw new Error("Please login again");
-
-    const data = await ResumeService.uploadResume(file, token);
-
-    setMessage("Resume uploaded successfully");
-
-    //  store extracted profile temporarily
-    sessionStorage.setItem(
-      "extractedProfile",
-      JSON.stringify(data.profile)
-    );
-
-    // redirect WITHOUT id
-    setTimeout(() => {
-      router.push("/profile");
-      console.log("Upload response:", data);
-    }, 800);
-  } catch (error) {
-    setMessage(
-      error instanceof Error ? error.message : "Resume upload failed"
-    );
-  } finally {
-    setLoading(false);
-  }
-};
-
-
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50">
-      <ResumeUpload
-        onSubmit={handleResumeUpload}
-        loading={loading}
-        message={message}
-      />
-    </main>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-900 mb-4">Dashboard</h1>
+        <p className="text-gray-600 mb-6">Welcome to your dashboard!</p>
+        
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Dashboard</h2>
+          <p className="text-gray-600">
+            This is a simple dashboard page. Your profile has been successfully submitted.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

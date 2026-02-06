@@ -183,5 +183,5 @@ export function getIconComponent(iconName: string): React.ComponentType<{ classN
     X,
   };
   
-  return iconMap[iconName] || Code; // Default to Code icon if not found
+  return iconMap[iconName] || Code; 
 }

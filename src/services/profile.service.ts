@@ -1,25 +1,36 @@
-// // src/services/profile.service.ts
-// import { API_BASE_URL } from "@/lib/api";
+import type { Profile } from "@/types/profile";
+import { API_BASE_URL } from "@/lib/api";
 
-// import type { Profile } from "@/types/profile";
+/* Author: Aflaha on Jan 30, 2026 
+   Purpose: Provides profile-related API services to save and update user profile data to the backend. 
+   Props: None 
+*/
 
-// export async function fetchProfile(
-//   profileId: string
-// ): Promise<Profile> {
-//   const token = localStorage.getItem("access");
 
-//   const res = await fetch(
-//     `${API_BASE_URL}/profile/${profileId}/`,
-//     {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     }
-//   );
+export async function saveProfile(profile: Profile) {
+  const token = localStorage.getItem("access");
 
-//   if (!res.ok) {
-//     throw new Error("Failed to fetch profile");
-//   }
+  if (!token) {
+    throw new Error("Not authenticated");
+  }
 
-//   return res.json();
-// }
+  const res = await fetch(`${API_BASE_URL}/profile/save/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(profile),
+  });
+
+  if (!res.ok) {
+    let errorMsg = "Failed to save profile";
+    try {
+      const data = await res.json();
+      errorMsg = data?.detail || errorMsg;
+    } catch {}
+    throw new Error(errorMsg);
+  }
+
+  return res.json();
+}

@@ -48,7 +48,6 @@ export default function EditableInfoCard({
   );
 }
 
-// Helper to get icon for basic info
 export function getBasicInfoIcon(label: string): React.ComponentType<{ className?: string }> {
   switch (label.toLowerCase()) {
     case 'email':

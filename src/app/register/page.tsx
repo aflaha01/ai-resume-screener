@@ -1,8 +1,13 @@
 "use client";
-
 import { useState } from "react";
 import RegisterForm from "@/components/forms/registration-form";
 import { AuthService } from "@/services/auth.service";
+
+/* Author: Aflaha on Jan 26, 2026 
+   Purpose: Renders the user registration page and handles new user account creation. 
+   Props: None 
+*/
+
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);

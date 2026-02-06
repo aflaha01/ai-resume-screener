@@ -1,5 +1,9 @@
-// services/auth.service.ts
 import { API_BASE_URL } from "@/lib/api";
+
+/* Author: Aflaha on Jan 26, 2026 
+   Purpose: Provides authentication-related API services for login and registration. 
+   Props: None 
+*/
 
 export class AuthService {
   static async login(data: { username: string; password: string }) {
@@ -11,7 +15,7 @@ export class AuthService {
 
     const result = await res.json();
 
-    // 🔥 THIS IS THE FIX
+
     if (!res.ok) {
       throw new Error(result.message || "Login failed");
     }

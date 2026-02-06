@@ -1,9 +1,14 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LoginForm from "@/components/forms/login-form";
 import { AuthService } from "@/services/auth.service";
+
+/* Author: Aflaha on Jan 26, 2026 
+   Purpose: Renders the login page and handles user authentication,and redirection after successful login. 
+   Props: None 
+*/
+
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,7 +31,7 @@ export default function LoginPage() {
       setMessage("Login successful");
 
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/resume-upload");
       }, 1000);
     } catch (error) {
       setMessage(

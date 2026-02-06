@@ -1,5 +1,11 @@
 import { API_BASE_URL } from "@/lib/api";
 
+/* Author: Aflaha on Jan 30, 2026 
+   Purpose: Provides AI-related API services to enhance and generate professional summaries using backend AI endpoints. 
+   Props: None 
+*/
+
+
 export async function enhanceSummary(
   summary: string[]
 ): Promise<string[]> {

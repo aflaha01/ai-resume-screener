@@ -1,3 +1,8 @@
+/* Author: Aflaha on Jan 30, 2026 
+   Purpose: Defines the Profile TypeScript interface used for user profile data across the application. 
+   Props: None 
+*/
+
 export interface Profile {
   name: string;
   email: string;
