@@ -1,54 +1,77 @@
+import { APIService } from "./api.service";
 import { API_BASE_URL } from "@/lib/api";
+import type { Profile } from "@/types/profile";
 
-/* Author: Aflaha on Jan 30, 2026 
-   Purpose: Provides AI-related API services to enhance and generate professional summaries using backend AI endpoints. 
-   Props: None 
+/*
+ Author: Aflaha
+ Purpose: AI-related API services
 */
 
+type GenerateSummaryContext = Pick<
+  Profile,
+  "skills" | "experience" | "projects" | "education"
+>;
 
-export async function enhanceSummary(
-  summary: string[]
-): Promise<string[]> {
-  const token = localStorage.getItem("access");
+type EnhanceSummaryResponse = {
+  enhanced_summary: string[];
+};
 
-  const res = await fetch(`${API_BASE_URL}/ai/enhance-summary/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ summary }),
-  });
+type GenerateSummaryResponse = {
+  generated_summary: string[];
+};
 
-  if (!res.ok) {
-    throw new Error("Failed to enhance summary");
+type GenerateJDResponse = {
+  job_description: string;
+};
+
+export type GenerateJDContext = {
+  title: string;
+  skills?: string[];
+  experience_level?: string;
+  job_type?: string;
+  location?: string;
+  notes?: string;
+};
+
+export class AIService extends APIService {
+  constructor() {
+    super(API_BASE_URL);
   }
 
-  const data = await res.json();
-  return data.enhanced_summary;
+  async enhanceSummary(summary: string[]): Promise<string[]> {
+    return this.post<EnhanceSummaryResponse>(
+      "/ai/enhance-summary/",
+      { summary }
+    )
+      .then((res) => res.data.enhanced_summary)
+      .catch((error) => {
+        throw error?.response?.data || "Failed to enhance summary";
+      });
+  }
+
+  async generateSummary(
+    context: GenerateSummaryContext
+  ): Promise<string[]> {
+    return this.post<GenerateSummaryResponse>(
+      "/ai/generate-summary/",
+      context
+    )
+      .then((res) => res.data.generated_summary)
+      .catch((error) => {
+        throw error?.response?.data || "Failed to generate summary";
+      });
+  }
+
+  async generateJobDescription(
+  context: GenerateJDContext
+): Promise<string> {
+  return this.post<GenerateJDResponse>(
+    "/ai/generate-job-description/",
+    context
+  )
+    .then((res) => res.data.job_description)
+    .catch((error) => {
+      throw error?.response?.data || "Failed to generate job description";
+    });
 }
-
-export async function generateSummary(context: {
-  skills: string[];
-  experience: string[];
-  projects: string[];
-  education: string[];
-}): Promise<string[]> {
-  const token = localStorage.getItem("access");
-
-  const res = await fetch(`${API_BASE_URL}/ai/generate-summary/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(context),
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to generate summary");
-  }
-
-  const data = await res.json();
-  return data.generated_summary;
 }

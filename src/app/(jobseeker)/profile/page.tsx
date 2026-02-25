@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import ProfileForm from "@/components/profile/ProfileForm";
+import ProfileForm from "@/components/jobseeker/profile/ProfileForm";
 import type { Profile } from "@/types/profile";
-import { saveProfile } from "@/services/profile.service";
+import { ProfileService } from "@/services/profile.service";
 import { Loader2 } from "lucide-react";
 
 /* Author: Aflaha on Jan 30, 2026 
@@ -20,29 +20,19 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const profileService = new ProfileService();
+
   useEffect(() => {
     const extracted = sessionStorage.getItem("extractedProfile");
-    const draft = sessionStorage.getItem("draftProfile");
-
-    console.log("Draft:", draft);
-    console.log("Extracted:", extracted);
-
-    const source = extracted || draft;
-
-    if (!source) {
+  
+    if (!extracted) {
       router.push("/resume-upload");
       return;
     }
 
-    const parsed = JSON.parse(source);
+    const parsed = JSON.parse(extracted);
     setProfile(parsed);
   }, [router]);
-
-  useEffect(() => {
-    if (profile) {
-      sessionStorage.setItem("draftProfile", JSON.stringify(profile));
-    }
-  }, [profile]);
 
   const handleBasicChange = (field: keyof Profile, value: string) => {
     if (!profile) return;
@@ -66,8 +56,8 @@ export default function ProfilePage() {
     try {
       setSaving(true);
 
-      const data = await saveProfile(profile);
-
+      const data = await profileService.saveProfile(profile);
+      
       setProfile(data.profile);
       sessionStorage.removeItem("draftProfile");
       setIsEditing(false);

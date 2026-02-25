@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { FileText, Sparkles } from "lucide-react";
-import { enhanceSummary, generateSummary } from "@/services/ai.service";
+import { AIService } from "@/services/ai.service";
 
 interface EditableSummaryProps {
   summary?: string[];
@@ -30,6 +30,8 @@ export default function EditableSummary({
   const [enhancing, setEnhancing] = useState(false);
   const [generating, setGenerating] = useState(false);
 
+  const aiService = new AIService(); 
+
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
@@ -55,7 +57,7 @@ export default function EditableSummary({
         .map(p => p.trim())
         .filter(p => p.length > 0);
 
-      const improved = await enhanceSummary(currentParagraphs);
+      const improved = await aiService.enhanceSummary(currentParagraphs);
 
       const improvedText = improved.join("\n\n");
       setText(improvedText);
@@ -72,7 +74,7 @@ export default function EditableSummary({
     try {
       setGenerating(true);
 
-      const generated = await generateSummary({
+      const generated = await aiService.generateSummary({
         skills,
         experience,
         projects,

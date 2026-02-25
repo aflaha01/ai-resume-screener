@@ -1,41 +1,70 @@
 import { API_BASE_URL } from "@/lib/api";
+import { APIService } from "@/services/api.service";
 
-/* Author: Aflaha on Jan 26, 2026 
-   Purpose: Provides authentication-related API services for login and registration. 
-   Props: None 
+/*
+ Author: Aflaha
+ Purpose: Authentication-related API services (Login & Register)
+ Backend aligned with role-based auth (HR / JOB_SEEKER)
 */
 
-export class AuthService {
-  static async login(data: { username: string; password: string }) {
-    const res = await fetch(`${API_BASE_URL}/auth/login/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+export type UserType = "HR" | "JOB_SEEKER";
 
-    const result = await res.json();
+export interface LoginPayload {
+  username: string;
+  password: string;
+  user_type: UserType;
+}
+
+export interface RegisterPayload {
+  username: string;
+  password: string;
+  user_type: UserType;
+}
 
 
-    if (!res.ok) {
-      throw new Error(result.message || "Login failed");
-    }
+export interface LoginResponse {
+  message: string;
+  access: string;
+  refresh: string;
+  user_type: UserType;
+  onboarding_completed: boolean;
+  statusCode: number;
+}
 
-    return result;
+export interface RegisterResponse {
+  message: string;
+  statusCode: number;
+}
+
+
+export class AuthService extends APIService {
+  constructor() {
+    super(API_BASE_URL);
   }
 
-  static async register(data: { username: string; password: string }) {
-    const res = await fetch(`${API_BASE_URL}/auth/register/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+  async login(data: LoginPayload): Promise<LoginResponse> {
+    return this.post("/auth/login/", data)
+      .then((res) => res.data as LoginResponse)
+      .catch((error) => {
+        throw error?.response?.data || "Login failed";
+      });
+  }
 
-    const result = await res.json();
+  async register(data: RegisterPayload): Promise<RegisterResponse> {
+    return this.post("/auth/register/", data)
+      .then((res) => res.data as RegisterResponse)
+      .catch((error) => {
+        throw error?.response?.data || "Registration failed";
+      });
+  }
 
-    if (!res.ok) {
-      throw new Error(result.message || "Registration failed");
-    }
+  saveTokens(access: string, refresh: string) {
+    localStorage.setItem("access", access);
+    localStorage.setItem("refresh", refresh);
+  }
 
-    return result;
+  clearTokens() {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
   }
 }
