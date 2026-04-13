@@ -39,7 +39,7 @@ const role =
       user_type: role, 
     });
 
-      authService.saveTokens(data.access, data.refresh);
+      authService.saveTokens(data.access, data.refresh, data.user_type);
 
       if (data.user_type === "HR") {
         router.push(

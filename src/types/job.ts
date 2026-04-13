@@ -6,6 +6,8 @@ export interface Job {
   description: string;
   location: string;
   job_type: string;
+  company_name: string
+  match_percentage?: number;
   last_date: string;
   status: JobStatus;
 }

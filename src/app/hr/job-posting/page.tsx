@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {Briefcase,Plus,MapPin,Calendar,Pencil,Trash2} from "lucide-react";
+import { Plus } from "lucide-react";
 import CreateJobForm from "@/components/hr/forms/CreateJobForm";
 import { JobService } from "@/services/job.service";
 import type { Job, JobStatus } from "@/types/job";
+import JobCard from "@/components/common/JobCard";
 
 /**
   Author: Aflaha on Feb 12, 2026
@@ -13,21 +14,10 @@ import type { Job, JobStatus } from "@/types/job";
   Props: None
  */
 
-
-
 export default function JobPostingPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [filter, setFilter] = useState<"all" | JobStatus>("all");
   const [openCreateJob, setOpenCreateJob] = useState(false);
-  const [expandedJobs, setExpandedJobs] = useState<number[]>([]);
-
-  const toggleJobDescription = (jobId: number) => {
-    setExpandedJobs((prev) =>
-      prev.includes(jobId)
-        ? prev.filter((id) => id !== jobId)
-        : [...prev, jobId]
-    );
-  };
 
   const jobService = new JobService();
 
@@ -99,77 +89,7 @@ export default function JobPostingPage() {
           )}
 
           {filteredJobs.map((job) => (
-            <div
-              key={job.id}
-              className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm"
-            >
-              <div className="flex justify-between gap-6">
-                {/* Left */}
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {job.title}
-                    </h3>
-                    {job.status === "active" && (
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                        Active
-                      </span>
-                    )}
-                  </div>
-
-                  <p
-                    className={`text-sm text-gray-600 mt-2 whitespace-pre-line ${
-                      expandedJobs.includes(job.id) ? "" : "line-clamp-3"
-                    }`}
-                  >
-                    {job.description}
-                  </p>
-
-                  {job.description.length > 300 && (
-                    <button
-                      onClick={() => toggleJobDescription(job.id)}
-                      className="mt-1 text-sm text-teal-600 hover:underline"
-                    >
-                      {expandedJobs.includes(job.id) ? "Show less" : "Read more"}
-                    </button>
-                  )}
-
-                  <div className="flex flex-wrap gap-4 mt-4 text-sm text-gray-500">
-                    <span className="flex items-center gap-1">
-                      <MapPin size={14} />
-                      {job.location}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Briefcase size={14} />
-                      {job.job_type}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Calendar size={14} />
-                      Last date {job.last_date}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    className="  text-gray-700 transition"
-                    title="Edit job"
-                  >
-                    <Pencil size={16} />
-                  </button>
-
-                  <button
-                    type="button"
-                    className=" text-red-600 transition"
-                    title="Delete job"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>
+           <JobCard key={job.id} job={job} showActions />
           ))}
         </div>
       </div>

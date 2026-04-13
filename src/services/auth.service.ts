@@ -58,13 +58,19 @@ export class AuthService extends APIService {
       });
   }
 
-  saveTokens(access: string, refresh: string) {
-    localStorage.setItem("access", access);
-    localStorage.setItem("refresh", refresh);
-  }
+ saveTokens(access: string, refresh: string, role: UserType) {
+  localStorage.setItem("access", access);
+  localStorage.setItem("refresh", refresh);
+  localStorage.setItem("role", role);
+}
+
+getRole(): UserType | null {
+  return localStorage.getItem("role") as UserType | null;
+}
 
   clearTokens() {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
+    localStorage.removeItem("role");
   }
 }

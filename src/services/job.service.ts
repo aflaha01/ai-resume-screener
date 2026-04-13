@@ -39,4 +39,14 @@ export class JobService extends APIService {
       throw error?.response?.data || "Failed to fetch jobs";
     }
   }
+
+      /* Fetch matched jobs for jobseeker */
+   async getMatchedJobs(): Promise<Job[]> {
+    try {
+    const res = await this.get("/jobs/matched/");
+    return res.data as Job[];
+    } catch (error: any) {
+    throw error?.response?.data || "Failed to fetch matched jobs";
+    }
+   } 
 }
